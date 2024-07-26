@@ -35,7 +35,7 @@
 ### Association
 
 - belongs_to :user
-- belongs_to :purchase
+- has_one :purchase
 
 ##購入記録
 ##purchasesテーブル
@@ -49,7 +49,7 @@
 
 - belongs_to :user
 - belongs_to :item
-- belongs_to :address
+- has_one :address
 
 ##発送先情報
 ##addressesテーブル
