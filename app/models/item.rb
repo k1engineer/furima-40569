@@ -6,7 +6,8 @@ class Item < ApplicationRecord
   validates :shipping_charge_id, numericality: { other_than: 1, message: "can't be blank" }
   validates :prefecture_id, numericality: { other_than: 1, message: "can't be blank" }
   validates :shipping_day_id, numericality: { other_than: 1, message: "can't be blank" }
-  validates :price, presence: true
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 300, less_than_or_equal_to: 9_999_999 }
+  validate  :image_presence
 
   has_one_attached :image
 
@@ -18,4 +19,8 @@ class Item < ApplicationRecord
   belongs_to :shipping_charge
   belongs_to :prefecture
   belongs_to :shipping_day
+
+  def image_presence
+    errors.add(:image, "can't be blank") unless image.attached?
+  end
 end
