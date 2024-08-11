@@ -3,6 +3,7 @@ class ItemsController < ApplicationController
   before_action :move_to_index, except: [:index, :show]
 
   def index
+    @items = Item.all.order('created_at DESC')
   end
 
   def new
