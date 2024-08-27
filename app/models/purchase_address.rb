@@ -4,10 +4,10 @@ class PurchaseAddress
                 :token
 
   with_options presence: true do
-    validates :user_id
-    validates :item_id
+    # validates :user_id
+    # validates :item_id
     validates :post_code, format: { with: /\A\d{3}-\d{4}\z/, message: 'must be in the format XXX-XXXX' }
-    validates :prefecture_id
+    validates :prefecture_id, numericality: { other_than: 1, message: "can't be blank" }
     validates :municipality
     validates :street_address
     validates :tel_number, format: { with: /\A\d{10,11}\z/, message: 'must be 10 or 11 digits' }
