@@ -11,7 +11,7 @@ class PurchaseAddress
     validates :municipality
     validates :street_address
     validates :tel_number, format: { with: /\A\d{10,11}\z/, message: 'must be 10 or 11 digits' }
-    # validates :token
+    validates :token, presence: true
   end
 
   def save
