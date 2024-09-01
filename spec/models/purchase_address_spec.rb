@@ -29,7 +29,7 @@ RSpec.describe PurchaseAddress, type: :model do
         expect(@purchase_address.errors.full_messages).to include 'Post code must be in the format XXX-XXXX'
       end
       it '都道府県のidが1では購入できない' do
-        @purchase_address.prefecture_id = '1'
+        @purchase_address.prefecture_id = 1
         @purchase_address.valid?
         expect(@purchase_address.errors.full_messages).to include "Prefecture can't be blank"
       end
@@ -62,6 +62,21 @@ RSpec.describe PurchaseAddress, type: :model do
         @purchase_address.token = nil
         @purchase_address.valid?
         expect(@purchase_address.errors.full_messages).to include("Token can't be blank")
+      end
+      it '電話番号は半角数字以外が含まれている場合、登録できないこと' do
+        @purchase_address.tel_number = '０９０１２３４５６７８'
+        @purchase_address.valid?
+        expect(@purchase_address.errors.full_messages).to include 'Tel number must be 10 or 11 digits'
+      end
+      it 'userが空だと登録できない' do
+        @purchase_address.user_id = nil
+        @purchase_address.valid?
+        expect(@purchase_address.errors.full_messages).to include("User can't be blank")
+      end
+      it 'itemが空だと登録できない' do
+        @purchase_address.item_id = nil
+        @purchase_address.valid?
+        expect(@purchase_address.errors.full_messages).to include("Item can't be blank")
       end
     end
   end

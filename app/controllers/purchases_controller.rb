@@ -1,16 +1,15 @@
 class PurchasesController < ApplicationController
+  before_action :set_item
   before_action :redirect_if_purchased
   before_action :user_verification
-  before_action :move_to_index
+  before_action :authenticate_user!
 
   def index
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
-    @item = Item.find(params[:item_id])
     @purchase_address = PurchaseAddress.new
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @purchase_address = PurchaseAddress.new(purchase_address_params)
     if @purchase_address.valid?
       pay_item
@@ -25,9 +24,13 @@ class PurchasesController < ApplicationController
 
   private
 
+  def set_item
+    @item = Item.find(params[:item_id])
+  end
+
   def purchase_address_params
-    item = Item.find(params[:item_id])
-    params.require(:purchase_address).permit(:post_code, :prefecture_id, :municipality, :street_address, :building_name, :tel_number, :token).merge(
+    # item = Item.find(params[:item_id])
+    params.require(:purchase_address).permit(:post_code, :prefecture_id, :municipality, :street_address, :building_name, :tel_number).merge(
       user_id: current_user.id, item_id: params[:item_id], token: params[:token]
     )
   end
@@ -42,21 +45,15 @@ class PurchasesController < ApplicationController
   end
 
   def redirect_if_purchased
-    @item = Item.find(params[:item_id])
+    # @item = Item.find(params[:item_id])
     return unless @item.purchase.present?
 
     redirect_to root_path
   end
 
   def user_verification
-    @item = Item.find(params[:item_id])
+    # @item = Item.find(params[:item_id])
     return unless current_user == @item.user
-
-    redirect_to root_path
-  end
-
-  def move_to_index
-    return if user_signed_in?
 
     redirect_to root_path
   end
